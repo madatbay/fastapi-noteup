@@ -7,4 +7,4 @@ from app.schemas.user import UserCreate, UserUpdate
 class UserManager(BaseManager[UserModel, UserCreate, UserUpdate]):
     ...
 
-user = UserManager(UserModel)
+user_manager = UserManager(UserModel)
