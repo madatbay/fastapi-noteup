@@ -1,3 +1,4 @@
+from fastapi import HTTPException, status
 from typing import Any, Generic, Optional, Type, TypeVar, Union
 
 from app.database.base_class import Base
@@ -27,7 +28,12 @@ class BaseManager(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
         return obj
 
     def get(self, db: Session, id: Any) -> Optional[ModelType]:
-        return db.query(self.model).filter(self.model.id == id).first()
+        _user = db.query(self.model).filter(self.model.id == id).first()
+        if _user:
+            return _user
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail=f"ID: {id} - Item not found"
+        )
 
     def all(self, db: Session, *, skip: int = 0, limit: int = 100) -> list[ModelType]:
         return db.query(self.model).offset(skip).limit(limit).all()
